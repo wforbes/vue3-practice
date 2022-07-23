@@ -1,34 +1,23 @@
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import type { Ref } from 'vue'
+import { ref, Ref } from 'vue'
 
 import type { Task, RepeatableTask } from '@/types';
+import TodoInput from './TodoInput.vue';
 
 const todoItems: Ref<(Task | RepeatableTask)[]> = ref([])
 
-const newTaskName: Ref<string> = ref("")
-
-function addNewTask() {
-  if (newTaskName.value == "") return;
-  const newTask: Task = {
-    id: todoItems.value.length,
-    name: newTaskName.value,
-    desc: "",
-    done: false,
-    createdDate: new Date(),
-    completedDate: null
-  }
-  todoItems.value.push(newTask)
-  newTaskName.value = ""
+function handleNewTask(newTask: Task) {
+  newTask.id = todoItems.value.length;
+  todoItems.value.push(newTask);
 }
+
 
 </script>
 
 <template>
   <div class="card">
-    <input v-model="newTaskName" placeholder="New Task Name" class="txt mr-6 v-mid" type="text" />
-    <button class="btn v-mid" @click="addNewTask">Add</button>
+    <TodoInput @handle-new-task="handleNewTask" />
   </div>
   <div>
     <ul class="todo-list">
@@ -43,7 +32,7 @@ function addNewTask() {
   </div>
 </template>
 
-<style scoped>
+<style>
 .v-mid {
   vertical-align: middle;
 }
