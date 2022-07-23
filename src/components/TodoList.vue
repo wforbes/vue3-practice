@@ -1,39 +1,43 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 
-type Task = {
-  id: number,
-  name: string,
-  desc: string,
-  done: boolean,
-  createdDate: Date,
-  completedDate: Date
-};
+import type { Task, RepeatableTask } from '@/types';
 
-type RepeatableTask = {
-  id: number,
-  name: string,
-  desc: string,
-  createdDate: Date,
-  completedDates: Date[]
-};
+const todoItems: Ref<(Task | RepeatableTask)[]> = ref([])
 
-const todoItems: Task[] | RepeatableTask[] = [];
+const newTaskName: Ref<string> = ref("")
+
+function addNewTask() {
+  if (newTaskName.value == "") return;
+  const newTask: Task = {
+    id: todoItems.value.length,
+    name: newTaskName.value,
+    desc: "",
+    done: false,
+    createdDate: new Date(),
+    completedDate: null
+  }
+  todoItems.value.push(newTask)
+  newTaskName.value = ""
+}
 
 </script>
 
 <template>
   <div class="card">
-    <input class="txt mr-6 v-mid" type="text" placeholder="New Task Name" />
-    <button class="btn v-mid">Add</button>
+    <input v-model="newTaskName" placeholder="New Task Name" class="txt mr-6 v-mid" type="text" />
+    <button class="btn v-mid" @click="addNewTask">Add</button>
   </div>
   <div>
     <ul class="todo-list">
       <li v-for="item of todoItems" :key="item.id">
+        {{ item.name}}
       </li>
       <li v-if="todoItems.length === 0" class="br-2">
-        Get started by adding a new item in the text field and hitting the 'Add' button.
+        Get started by adding the name for task; <br />
+        Then, hit the 'Add' button.
       </li>
     </ul>
   </div>
@@ -51,13 +55,13 @@ const todoItems: Task[] | RepeatableTask[] = [];
 }
 .txt {
   padding: 0.15em;
-  border: 0.1em solid darkmagenta;
+  border: 0.1em solid darkgreen;
   outline: none;
   border-radius: 0.4em;
   font-size: 2em;
 }
 .txt:focus {
-  border: 0.1em solid magenta;
+  border: 0.1em solid lightgreen;
   outline: none;
 }
 
@@ -66,15 +70,16 @@ const todoItems: Task[] | RepeatableTask[] = [];
 }
 .btn {
   background-color: gainsboro;
-  color: darkmagenta;
+  color: darkgreen;
   border-radius: 0.4em;
-  border: 0.1em solid darkmagenta;
+  border: 0.1em solid darkgreen;
   font-size: 1.5em;
   padding: 0.3em;
 }
 .btn:focus {
   outline: none;
-  border-color: magenta;
+  border-color: lightgreen;
+  color: green;
 }
 .todo-list {
   list-style: none;
@@ -82,7 +87,7 @@ const todoItems: Task[] | RepeatableTask[] = [];
 }
 .todo-list > li {
   border: 0.1em solid grey;
-  
   padding: 1em;
+  margin-bottom: 0.25em;
 }
 </style>
