@@ -5,11 +5,11 @@ import { ref, Ref } from 'vue'
 import type { Task, RepeatableTask } from '@/types';
 import TodoInput from './TodoInput.vue';
 
-const todoItems: Ref<(Task | RepeatableTask)[]> = ref([])
+const todoTasks: Ref<(Task | RepeatableTask)[]> = ref([])
 
 function handleNewTask(newTask: Task) {
-  newTask.id = todoItems.value.length;
-  todoItems.value.push(newTask);
+  newTask.id = todoTasks.value.length;
+  todoTasks.value.push(newTask);
 }
 
 
@@ -17,14 +17,14 @@ function handleNewTask(newTask: Task) {
 
 <template>
   <div class="card">
-    <TodoInput @handle-new-task="handleNewTask" />
+    <TodoInput :todoTasks="todoTasks" @handle-new-task="handleNewTask" />
   </div>
   <div>
     <ul class="todo-list">
-      <li v-for="item of todoItems" :key="item.id">
+      <li v-for="item of todoTasks" :key="item.id">
         {{ item.name}}
       </li>
-      <li v-if="todoItems.length === 0" class="br-2">
+      <li v-if="todoTasks.length === 0" class="br-2">
         Get started by adding the name for task; <br />
         Then, hit the 'Add' button.
       </li>
@@ -53,10 +53,13 @@ function handleNewTask(newTask: Task) {
   border: 0.1em solid lightgreen;
   outline: none;
 }
-
 .txt::placeholder {
   opacity: 35%;
 }
+.txt.invalid {
+  border-color: red!important;
+}
+
 .btn {
   background-color: gainsboro;
   color: darkgreen;
@@ -70,6 +73,12 @@ function handleNewTask(newTask: Task) {
   border-color: lightgreen;
   color: green;
 }
+.btn:disabled {
+	border-color: grey;
+  background-color:grey;
+  color: darkgrey;
+}
+
 .todo-list {
   list-style: none;
   padding-left: 0;
