@@ -14,8 +14,9 @@ const errorMsg: Ref<string> = ref("")
 watch(newTaskName, (newV, oldV) => {
 	if (newV !== "") {
 		const matches = props.todoTasks?.filter((t: any) => {
-			return newV.includes(t.name)
+			return newV.toLowerCase() === t.name.toLowerCase()
 		})
+		console.log(matches);
 		if (matches && matches?.length > 0) {
 			errorMsg.value = "That task name is already used"
 			taken.value = true
